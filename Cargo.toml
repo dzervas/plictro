@@ -1,0 +1,36 @@
+[package]
+name = "plictro"
+version = "0.1.0"
+authors = ["Dimitris Zervas <dzervas@noc.grnet.gr>"]
+edition = "2018"
+
+[dependencies]
+cortex-m = { version = "*", features = ["const-fn"] }
+cortex-m-rt = "*"
+embedded-hal = "*"
+nb = "*"
+nrf52840-hal = "*"
+nrf52840-dk-bsp = { git = "https://github.com/nrf-rs/nRF52840-DK" }
+panic-semihosting = "*"
+rubble = { git = "https://github.com/jonas-schievink/rubble" }
+rubble-nrf5x = { git = "https://github.com/jonas-schievink/rubble", features = ["52840"] }
+spin = "*"
+
+[dev-dependencies]
+cortex-m-semihosting = "*"
+panic-halt = "*"
+
+[features]
+default = ["rt"]
+rt = ["nrf52840-hal/rt"]
+
+[profile.dev]
+incremental = false
+codegen-units = 1
+debug = true
+lto = false
+
+[profile.release]
+debug = true
+lto = true
+opt-level = "s"
