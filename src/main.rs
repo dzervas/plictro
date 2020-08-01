@@ -11,6 +11,9 @@ extern crate rubble_nrf5x;
 // #[allow(unused_imports)]
 // use panic_semihosting;
 
+mod hid_service;
+pub mod hid_consts;
+
 use cortex_m_rt::entry;
 use nb::block;
 use nrf52840_dk_bsp::Board;

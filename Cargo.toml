@@ -12,8 +12,10 @@ nb = "*"
 nrf52840-hal = "*"
 nrf52840-dk-bsp = { git = "https://github.com/nrf-rs/nRF52840-DK" }
 panic-semihosting = "*"
-rubble = { git = "https://github.com/jonas-schievink/rubble" }
-rubble-nrf5x = { git = "https://github.com/jonas-schievink/rubble", features = ["52840"] }
+# rubble = { git = "https://github.com/jonas-schievink/rubble" }
+# rubble-nrf5x = { git = "https://github.com/jonas-schievink/rubble", features = ["52840"] }
+rubble = { path = "../rubble/rubble" }
+rubble-nrf5x = { path = "../rubble/rubble-nrf5x", features = ["52840"] }
 spin = "*"
 
 [dev-dependencies]
