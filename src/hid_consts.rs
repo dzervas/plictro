@@ -7,15 +7,9 @@
 // REPORT DESCRIPTOR
 //--------------------------------------------------------------------+
 
-macro_rules! HID_REPORT_ITEM0 {
-	($tag: expr, $type: expr) => {
-		(($tag << 4) | ($type << 2) | 1)
-	};
-}
-
 macro_rules! HID_REPORT_ITEM {
-	($data: expr, $tag: expr, $type: expr) => {
-		(($tag << 4) | ($type << 2) | 1), $data
+	($tag: expr, $type: expr, $size: expr) => {
+		(($tag << 4) | ($type << 2) | $size)
 	};
 }
 
@@ -24,31 +18,33 @@ pub const RI_TYPE_GLOBAL: u32 = 1;
 pub const RI_TYPE_LOCAL: u32 = 2;
 
 //------------- MAIN ITEMS 6.2.2.4 -------------//
-macro_rules! HID_INPUT { ($data: expr) =>          { HID_REPORT_ITEM!($data, 8, RI_TYPE_MAIN) }; }
-macro_rules! HID_OUTPUT { ($data: expr) =>         { HID_REPORT_ITEM!($data, 9, RI_TYPE_MAIN) }; }
-macro_rules! HID_COLLECTION { ($data: expr) =>     { HID_REPORT_ITEM!($data, 10, RI_TYPE_MAIN) }; }
-macro_rules! HID_FEATURE { ($data: expr) =>        { HID_REPORT_ITEM!($data, 11, RI_TYPE_MAIN) }; }
-macro_rules! HID_COLLECTION_END { () => { HID_REPORT_ITEM0!(12, RI_TYPE_MAIN) }; }
+macro_rules! HID_INPUT { ($data: expr) =>          { HID_REPORT_ITEM!(8, RI_TYPE_MAIN, 1) }; }
+macro_rules! HID_OUTPUT { ($data: expr) =>         { HID_REPORT_ITEM!(9, RI_TYPE_MAIN, 1) }; }
+macro_rules! HID_COLLECTION { ($data: expr) =>     { HID_REPORT_ITEM!(10, RI_TYPE_MAIN, 1) }; }
+// macro_rules! HID_FEATURE { ($data: expr) =>        { HID_REPORT_ITEM!(11, RI_TYPE_MAIN, 1) }; }
+macro_rules! HID_COLLECTION_END { () =>            { HID_REPORT_ITEM!(12, RI_TYPE_MAIN, 0) }; }
 
 //------------- GLOBAL ITEMS 6.2.2.7 -------------//
-macro_rules! HID_USAGE_PAGE { ($data: expr) =>     { HID_REPORT_ITEM!($data, 0, RI_TYPE_GLOBAL) }; }
-macro_rules! HID_LOGICAL_MIN { ($data: expr) =>    { HID_REPORT_ITEM!($data, 1, RI_TYPE_GLOBAL) }; }
-macro_rules! HID_LOGICAL_MAX { ($data: expr) =>    { HID_REPORT_ITEM!($data, 2, RI_TYPE_GLOBAL) }; }
-macro_rules! HID_PHYSICAL_MIN { ($data: expr) =>   { HID_REPORT_ITEM!($data, 3, RI_TYPE_GLOBAL) }; }
-macro_rules! HID_PHYSICAL_MAX { ($data: expr) =>   { HID_REPORT_ITEM!($data, 4, RI_TYPE_GLOBAL) }; }
-macro_rules! HID_UNIT_EXPONENT { ($data: expr) =>  { HID_REPORT_ITEM!($data, 5, RI_TYPE_GLOBAL) }; }
-macro_rules! HID_UNIT    { ($data: expr) =>        { HID_REPORT_ITEM!($data, 6, RI_TYPE_GLOBAL) }; }
-macro_rules! HID_REPORT_SIZE { ($data: expr) =>    { HID_REPORT_ITEM!($data, 7, RI_TYPE_GLOBAL) }; }
-macro_rules! HID_REPORT_ID { ($data: expr) =>      { HID_REPORT_ITEM!($data, 8, RI_TYPE_GLOBAL) }; }
-macro_rules! HID_REPORT_COUNT { ($data: expr) =>   { HID_REPORT_ITEM!($data, 9, RI_TYPE_GLOBAL) }; }
+macro_rules! HID_USAGE_PAGE { ($data: expr) =>     { HID_REPORT_ITEM!(0, RI_TYPE_GLOBAL, 1) }; }
+macro_rules! HID_LOGICAL_MIN { ($data: expr) =>    { HID_REPORT_ITEM!(1, RI_TYPE_GLOBAL, 1) }; }
+macro_rules! HID_LOGICAL_MAX { ($data: expr) =>    { HID_REPORT_ITEM!(2, RI_TYPE_GLOBAL, 1) }; }
+macro_rules! HID_LOGICAL_MAX_N { ($data: expr, $size: expr) =>    { HID_REPORT_ITEM!(2, RI_TYPE_GLOBAL, $size) }; }
+// macro_rules! HID_PHYSICAL_MIN { ($data: expr) =>   { HID_REPORT_ITEM!(3, RI_TYPE_GLOBAL, 1) }; }
+// macro_rules! HID_PHYSICAL_MAX { ($data: expr) =>   { HID_REPORT_ITEM!(4, RI_TYPE_GLOBAL, 1) }; }
+// macro_rules! HID_UNIT_EXPONENT { ($data: expr) =>  { HID_REPORT_ITEM!(5, RI_TYPE_GLOBAL, 1) }; }
+// macro_rules! HID_UNIT    { ($data: expr) =>        { HID_REPORT_ITEM!(6, RI_TYPE_GLOBAL, 1) }; }
+macro_rules! HID_REPORT_SIZE { ($data: expr) =>    { HID_REPORT_ITEM!(7, RI_TYPE_GLOBAL, 1) }; }
+macro_rules! HID_REPORT_ID { ($data: expr) =>      { HID_REPORT_ITEM!(8, RI_TYPE_GLOBAL, 1) }; }
+macro_rules! HID_REPORT_COUNT { ($data: expr) =>   { HID_REPORT_ITEM!(9, RI_TYPE_GLOBAL, 1) }; }
 
 // #define HID_PUSH                  HID_REPORT_ITEM(x, 10, RI_TYPE_GLOBAL, 0)
 // #define HID_POP                   HID_REPORT_ITEM(x, 11, RI_TYPE_GLOBAL, 0)
 
 //------------- LOCAL ITEMS 6.2.2.8 -------------//
-macro_rules! HID_USAGE { ($data: expr) =>          { HID_REPORT_ITEM!($data, 0, RI_TYPE_LOCAL) }; }
-macro_rules! HID_USAGE_MIN { ($data: expr) =>      { HID_REPORT_ITEM!($data, 1, RI_TYPE_LOCAL) }; }
-macro_rules! HID_USAGE_MAX { ($data: expr) =>      { HID_REPORT_ITEM!($data, 2, RI_TYPE_LOCAL) }; }
+macro_rules! HID_USAGE { ($data: expr) =>          { HID_REPORT_ITEM!(0, RI_TYPE_LOCAL, 1) }; }
+macro_rules! HID_USAGE_MIN { ($data: expr) =>      { HID_REPORT_ITEM!(1, RI_TYPE_LOCAL, 1) }; }
+macro_rules! HID_USAGE_MAX { ($data: expr) =>      { HID_REPORT_ITEM!(2, RI_TYPE_LOCAL, 1) }; }
+macro_rules! HID_USAGE_MAX_N { ($data: expr, $size: expr) =>      { HID_REPORT_ITEM!(2, RI_TYPE_LOCAL, $size) }; }
 
 //--------------------------------------------------------------------+
 // HID KEYCODE
@@ -327,65 +323,79 @@ pub const HID_USAGE_CONSUMER_AC_REFRESH: u32 = 551;
 pub const HID_USAGE_CONSUMER_AC_BOOKMARKS: u32 = 554;
 pub const HID_USAGE_CONSUMER_AC_PAN: u32 = 568;
 
+//------------- COLLECTION ITEM 6.2.2.6 -------------//
+pub const HID_COLLECTION_PHYSICAL: u32 = 0;
+pub const HID_COLLECTION_APPLICATION: u32 = 1;
+pub const HID_COLLECTION_LOGICAL: u32 = 2;
+pub const HID_COLLECTION_REPORT: u32 = 3;
+pub const HID_COLLECTION_NAMED_ARRAY: u32 = 4;
+pub const HID_COLLECTION_USAGE_SWITCH: u32 = 5;
+pub const HID_COLLECTION_USAGE_MODIFIER: u32 = 6;
 
-pub const HID_REPORT_MAP: [u32; 20] = [
+pub const REPORT_ID_KEYBOARD: u32 = 1;
+pub const REPORT_ID_CONSUMER_CONTROL: u32 = 2;
+pub const REPORT_ID_MOUSE: u32 = 3;
+pub const REPORT_ID_GAMEPAD: u32 = 4;
+
+
+pub const HID_REPORT_MAP: [u32; 88] = [
   //------------- Keyboard Report  -------------//
-  HID_USAGE_PAGE!  ( HID_USAGE_PAGE_DESKTOP     ),
-  HID_USAGE!       ( HID_USAGE_DESKTOP_KEYBOARD ),
-  HID_COLLECTION!  ( HID_COLLECTION_APPLICATION ),
-    HID_REPORT_ID! ( REPORT_ID_KEYBOARD         ),
-    HID_USAGE_PAGE!( HID_USAGE_PAGE_KEYBOARD    ),
+  HID_USAGE_PAGE!  ( HID_USAGE_PAGE_DESKTOP     ), HID_USAGE_PAGE_DESKTOP     ,
+  HID_USAGE!       ( HID_USAGE_DESKTOP_KEYBOARD ), HID_USAGE_DESKTOP_KEYBOARD ,
+  HID_COLLECTION!  ( HID_COLLECTION_APPLICATION ), HID_COLLECTION_APPLICATION ,
+    HID_REPORT_ID! ( REPORT_ID_KEYBOARD         ), REPORT_ID_KEYBOARD         ,
+    HID_USAGE_PAGE!( HID_USAGE_PAGE_KEYBOARD    ), HID_USAGE_PAGE_KEYBOARD    ,
       // 8 bits Modifier Keys (Shfit, Control, Alt)
-      HID_USAGE_MIN!    ( 224                                    ),
-      HID_USAGE_MAX!    ( 231                                    ),
-      HID_LOGICAL_MIN!  ( 0                                      ),
-      HID_LOGICAL_MAX!  ( 1                                      ),
+      HID_USAGE_MIN!    ( 224                                    ), 224                                    ,
+      HID_USAGE_MAX!    ( 231                                    ), 231                                    ,
+      HID_LOGICAL_MIN!  ( 0                                      ), 0                                      ,
+      HID_LOGICAL_MAX!  ( 1                                      ), 1                                      ,
 
-      HID_REPORT_COUNT! ( 8                                      ),
-      HID_REPORT_SIZE!  ( 1                                      ),
-      HID_INPUT!        ( HID_DATA | HID_VARIABLE | HID_ABSOLUTE ),
+      HID_REPORT_COUNT! ( 8                                      ), 8                                      ,
+      HID_REPORT_SIZE!  ( 1                                      ), 1                                      ,
+      HID_INPUT!        ( HID_DATA | HID_VARIABLE | HID_ABSOLUTE ), HID_DATA | HID_VARIABLE | HID_ABSOLUTE ,
 
       // 8 bit reserved
-      HID_REPORT_COUNT! ( 1                                      ),
-      HID_REPORT_SIZE!  ( 8                                      ),
-      HID_INPUT!        ( HID_CONSTANT                           ),
+      HID_REPORT_COUNT! ( 1                                      ), 1                                      ,
+      HID_REPORT_SIZE!  ( 8                                      ), 8                                      ,
+      HID_INPUT!        ( HID_CONSTANT                           ), HID_CONSTANT                           ,
 
     // 6-byte Keycodes
-    HID_USAGE_PAGE! (HID_USAGE_PAGE_KEYBOARD),
-      HID_USAGE_MIN!    ( 0                                   ),
-      HID_USAGE_MAX!    ( 255                                 ),
-      HID_LOGICAL_MIN!  ( 0                                   ),
-      HID_LOGICAL_MAX!  ( 255                                 ),
+    HID_USAGE_PAGE! (HID_USAGE_PAGE_KEYBOARD),HID_USAGE_PAGE_KEYBOARD,
+      HID_USAGE_MIN!    ( 0                                   ), 0                                   ,
+      HID_USAGE_MAX!    ( 255                                 ), 255                                 ,
+      HID_LOGICAL_MIN!  ( 0                                   ), 0                                   ,
+      HID_LOGICAL_MAX!  ( 255                                 ), 255                                 ,
 
-      HID_REPORT_COUNT! ( 6                                   ),
-      HID_REPORT_SIZE!  ( 8                                   ),
-      HID_INPUT!        ( HID_DATA | HID_ARRAY | HID_ABSOLUTE ),
+      HID_REPORT_COUNT! ( 6                                   ), 6                                   ,
+      HID_REPORT_SIZE!  ( 8                                   ), 8                                   ,
+      HID_INPUT!        ( HID_DATA | HID_ARRAY | HID_ABSOLUTE ), HID_DATA | HID_ARRAY | HID_ABSOLUTE ,
 
     // LED Indicator Kana | Compose | Scroll Lock | CapsLock | NumLock
-    HID_USAGE_PAGE!  ( HID_USAGE_PAGE_LED                   ),
+    HID_USAGE_PAGE!  ( HID_USAGE_PAGE_LED                   ), HID_USAGE_PAGE_LED                   ,
       /* 5-bit Led report */
-      HID_USAGE_MIN!    ( 1                                       ),
-      HID_USAGE_MAX!    ( 5                                       ),
-      HID_REPORT_COUNT! ( 5                                       ),
-      HID_REPORT_SIZE!  ( 1                                       ),
-      HID_OUTPUT!       ( HID_DATA | HID_VARIABLE | HID_ABSOLUTE  ),
+      HID_USAGE_MIN!    ( 1                                       ), 1                                       ,
+      HID_USAGE_MAX!    ( 5                                       ), 5                                       ,
+      HID_REPORT_COUNT! ( 5                                       ), 5                                       ,
+      HID_REPORT_SIZE!  ( 1                                       ), 1                                       ,
+      HID_OUTPUT!       ( HID_DATA | HID_VARIABLE | HID_ABSOLUTE  ), HID_DATA | HID_VARIABLE | HID_ABSOLUTE  ,
       /* led padding */
-      HID_REPORT_COUNT! ( 1                                       ),
-      HID_REPORT_SIZE!  ( 3                                       ),
-      HID_OUTPUT!       ( HID_CONSTANT                            ),
+      HID_REPORT_COUNT! ( 1                                       ), 1                                       ,
+      HID_REPORT_SIZE!  ( 3                                       ), 3                                       ,
+      HID_OUTPUT!       ( HID_CONSTANT                            ), HID_CONSTANT                            ,
   HID_COLLECTION_END!(),
 
   //------------- Consumer Control Report -------------//
-  HID_USAGE_PAGE! ( HID_USAGE_PAGE_CONSUMER    ),
-  HID_USAGE!      ( HID_USAGE_CONSUMER_CONTROL ),
-  HID_COLLECTION! ( HID_COLLECTION_APPLICATION ),
-    HID_REPORT_ID!( REPORT_ID_CONSUMER_CONTROL ),
-    HID_LOGICAL_MIN!  ( 0x00                                ),
-    HID_LOGICAL_MAX_N!( 0x03FF, 2                           ),
-    HID_USAGE_MIN!    ( 0x00                                ),
-    HID_USAGE_MAX_N!  ( 0x03FF, 2                           ),
-    HID_REPORT_COUNT! ( 1                                   ),
-    HID_REPORT_SIZE!  ( 16                                  ),
-    HID_INPUT!        ( HID_DATA | HID_ARRAY | HID_ABSOLUTE ),
+  HID_USAGE_PAGE! ( HID_USAGE_PAGE_CONSUMER    ), HID_USAGE_PAGE_CONSUMER    ,
+  HID_USAGE!      ( HID_USAGE_CONSUMER_CONTROL ), HID_USAGE_CONSUMER_CONTROL ,
+  HID_COLLECTION! ( HID_COLLECTION_APPLICATION ), HID_COLLECTION_APPLICATION ,
+    HID_REPORT_ID!( REPORT_ID_CONSUMER_CONTROL ), REPORT_ID_CONSUMER_CONTROL ,
+    HID_LOGICAL_MIN!  ( 0x00                                ), 0x00                                ,
+    HID_LOGICAL_MAX_N!( 0x03FF, 2                           ), 0x03FF,
+    HID_USAGE_MIN!    ( 0x00                                ), 0x00                                ,
+    HID_USAGE_MAX_N!  ( 0x03FF, 2                           ), 0x03FF,
+    HID_REPORT_COUNT! ( 1                                   ), 1                                   ,
+    HID_REPORT_SIZE!  ( 16                                  ), 16                                  ,
+    HID_INPUT!        ( HID_DATA | HID_ARRAY | HID_ABSOLUTE ), HID_DATA | HID_ARRAY | HID_ABSOLUTE ,
   HID_COLLECTION_END!(),
 ];

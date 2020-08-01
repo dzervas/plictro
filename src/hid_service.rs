@@ -1,6 +1,6 @@
 use rubble::att::{AttUuid, Attribute, AttributeProvider, Handle, HandleRange};
 use rubble::utils::HexSlice;
-use rubble::uuid::{Uuid, Uuid16};
+use rubble::uuid::Uuid16;
 use rubble::Error;
 use core::cmp;
 

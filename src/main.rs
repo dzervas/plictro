@@ -23,11 +23,25 @@ use nrf52840_dk_bsp::hal::prelude::*;
 use nrf52840_dk_bsp::hal::gpio::Level;
 use nrf52840_dk_bsp::hal::timer::{self, Timer};
 
-use rubble::beacon::Beacon;
-use rubble::link::{ad_structure::AdStructure, MIN_PDU_BUF};
+use rubble::config::Config;
+use rubble::l2cap::{BleChannelMap, L2CAPState};
+use rubble::link::{MIN_PDU_BUF, LinkLayer, Responder};
+use rubble::link::ad_structure::AdStructure;
+use rubble::link::queue::{PacketQueue, SimpleQueue};
+use rubble::security::NoSecurity;
+use rubble::time::Duration;
 use rubble_nrf5x::radio::{BleRadio, PacketBuffer};
 use rubble_nrf5x::utils::get_device_address;
+use rubble_nrf5x::timer::BleTimer;
 
+pub enum AppConfig {}
+
+impl Config for AppConfig {
+	type Timer = BleTimer<hal::pac::TIMER0>;
+	type Transmitter = BleRadio;
+	type ChannelMapper = BleChannelMap<hid_service::HIDServiceAttrs<'static>, NoSecurity>;
+	type PacketQueue = &'static mut SimpleQueue;
+}
 
 #[entry]
 fn main() -> ! {
@@ -60,15 +74,38 @@ fn main() -> ! {
 		&mut BLE_RX_BUF,
 	) };
 
-	let beacon = Beacon::new(
-		device_address,
-		&[AdStructure::CompleteLocalName("Rusty Beacon (nRF52)")],
-	).unwrap();
+	static mut tx_queue: SimpleQueue = SimpleQueue::new();
+	static mut rx_queue: SimpleQueue = SimpleQueue::new();
+
+	// Create TX/RX queues
+	let (tx, tx_cons) = unsafe { tx_queue.split() };
+	let (rx_prod, rx) = unsafe { rx_queue.split() };
+
+	// Create the actual BLE stack objects
+	let ble_timer = BleTimer::init(board.TIMER0);
+	let mut ble_ll = LinkLayer::<AppConfig>::new(device_address, ble_timer);
+
+	let ble_r = Responder::<AppConfig>::new(
+		tx,
+		rx,
+		L2CAPState::new(BleChannelMap::with_attributes(hid_service::HIDServiceAttrs::new())),
+	);
 
 	// ----
 
 	led.set_low().unwrap();
 	let mut is_high = false;
+
+	let next_update = ble_ll.start_advertise(
+			Duration::from_millis(200),
+			&[AdStructure::CompleteLocalName("Plictro")],
+			&mut radio,
+			tx_cons,
+			rx_prod,
+		)
+		.unwrap();
+
+	ble_ll.timer().configure_interrupt(next_update);
 
 	loop {
 		if is_high {
@@ -78,7 +115,18 @@ fn main() -> ! {
 			led.set_high().unwrap();
 			is_high = true;
 		}
-		beacon.broadcast(&mut radio);
+		// beacon.broadcast(&mut radio);
+
+		let bletimer = ble_ll.timer();
+		if !bletimer.is_interrupt_pending() {
+			continue;
+		}
+		bletimer.clear_interrupt();
+
+		let cmd = ble_ll.update_timer(&mut radio);
+		radio.configure_receiver(cmd.radio);
+
+		ble_ll.timer().configure_interrupt(cmd.next_update);
 
 		delay(&mut timer, 333_333);
 	}
