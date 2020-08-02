@@ -4,8 +4,8 @@ use rubble::uuid::Uuid16;
 use rubble::Error;
 use core::cmp;
 
-pub struct HIDServiceAttrs<'a> {
-	attributes: [Attribute<'a>; 5],
+pub struct HIDServiceAttrs {
+	attributes: [Attribute<'static>; 5],
 }
 
 // HID Service (UUID: 1812)
@@ -14,7 +14,7 @@ pub struct HIDServiceAttrs<'a> {
 // Boot Keyboard report length: 1 (modifier) + 1 (reserved) + 6 (keycode)
 // Consumer control report length: 2 (usage value)
 
-impl<'a> HIDServiceAttrs<'a> {
+impl HIDServiceAttrs {
 	pub fn new() -> Self {
 		Self {
 			attributes: [
@@ -69,7 +69,7 @@ impl<'a> HIDServiceAttrs<'a> {
 	}
 }
 
-impl<'a> AttributeProvider for HIDServiceAttrs<'a> {
+impl AttributeProvider for HIDServiceAttrs {
 	fn for_attrs_in_range(
 		&mut self,
 		range: HandleRange,

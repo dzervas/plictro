@@ -7,6 +7,7 @@ edition = "2018"
 [dependencies]
 cortex-m = { version = "*", features = ["const-fn"] }
 cortex-m-rt = "*"
+cortex-m-rtic = "*"
 embedded-hal = "*"
 nb = "*"
 nrf52840-hal = "*"
