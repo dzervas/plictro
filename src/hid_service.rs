@@ -14,6 +14,7 @@ pub struct HIDServiceAttrs {
 // Boot Keyboard report length: 1 (modifier) + 1 (reserved) + 6 (keycode)
 // Consumer control report length: 2 (usage value)
 
+#[allow(clippy::new_without_default)]
 impl HIDServiceAttrs {
 	pub fn new() -> Self {
 		Self {
@@ -58,12 +59,12 @@ impl HIDServiceAttrs {
 					]),
 				},
 
-                // Characteristic value (Keyboard output)
-                Attribute {
-                    att_type: AttUuid::Uuid16(Uuid16(0x2A32)), // "Boot Keyboard Output Report"
-                    handle: Handle::from_raw(0x0003),
-                    value: HexSlice(&[0u8]),
-                },
+				// Characteristic value (Keyboard output)
+				Attribute {
+					att_type: AttUuid::Uuid16(Uuid16(0x2A32)), // "Boot Keyboard Output Report"
+					handle: Handle::from_raw(0x0003),
+					value: HexSlice(&[0u8]),
+				},
 			],
 		}
 	}
