@@ -10,7 +10,7 @@ cortex-m-rt = "*"
 embedded-hal = "*"
 nb = "*"
 nrf52840-hal = "*"
-nrf52840-dk-bsp = { git = "https://github.com/nrf-rs/nRF52840-DK" }
+# nrf52840-hal = { git = "https://github.com/japaric/nrf-hal", branch = "usb-device" }
 panic-semihosting = "*"
 
 [dev-dependencies]

@@ -8,20 +8,23 @@ extern crate panic_semihosting;
 
 use cortex_m_rt::entry;
 use nb::block;
-use nrf52840_dk_bsp::Board;
-// use nrf52840_dk_bsp::hal as hal;
-use nrf52840_dk_bsp::hal::prelude::*;
-use nrf52840_dk_bsp::hal::gpio::Level;
-use nrf52840_dk_bsp::hal::timer::{self, Timer};
+use nrf52840_hal as hal;
+use hal::gpio::{Level, p0};
+use hal::prelude::*;
+use hal::pac::Peripherals;
+use hal::timer::{Timer, Instance};
+
 
 #[entry]
 fn main() -> ! {
 
-	let board = Board::take().unwrap();
+	let periph = Peripherals::take().unwrap();
 
-	let mut timer = Timer::new(board.TIMER4);
-	let mut led = board.pins.P0_28.into_push_pull_output(Level::High);
-	led.set_high().unwrap();
+	// Indicator LED
+	let mut timer = Timer::new(periph.TIMER4);
+	let p0 = p0::Parts::new(periph.P0);
+
+	let mut led = p0.p0_28.into_push_pull_output(Level::High);
 
 	led.set_low().unwrap();
 	let mut is_high = false;
@@ -42,7 +45,7 @@ fn main() -> ! {
 
 fn delay<T>(timer: &mut Timer<T>, cycles: u32)
 where
-	T: timer::Instance,
+	T: Instance,
 {
 	timer.start(cycles);
 	let _ = block!(timer.wait());
