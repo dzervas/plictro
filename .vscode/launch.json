@@ -1,0 +1,41 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "cortex-debug",
+			"request": "launch",
+			"name": "Debug (OpenOCD)",
+			"servertype": "openocd",
+			"cwd": "${workspaceRoot}",
+			"executable": "./target/thumbv7em-none-eabihf/debug/plictro",
+			"device": "nRF52840",
+			"configFiles": [
+				"interface/stlink-v2-1.cfg",
+				"target/nrf52.cfg"
+			],
+			"runToMain": true
+		},
+		{
+			"type": "lldb",
+			"request": "launch",
+			"name": "Debug unit tests in executable 'plictro'",
+			"cargo": {
+				"args": [
+					"test",
+					"--no-run",
+					"--bin=plictro",
+					"--package=plictro"
+				],
+				"filter": {
+					"name": "plictro",
+					"kind": "bin"
+				}
+			},
+			"args": [],
+			"cwd": "${workspaceFolder}"
+		}
+	]
+}
