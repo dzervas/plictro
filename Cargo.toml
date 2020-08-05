@@ -8,10 +8,12 @@ edition = "2018"
 cortex-m = { version = "*", features = ["const-fn"] }
 cortex-m-rt = "*"
 embedded-hal = "*"
+embedded-graphics = "*"
 nb = "*"
 nrf52840-hal = "*"
 # nrf52840-hal = { git = "https://github.com/japaric/nrf-hal", branch = "usb-device" }
 panic-semihosting = "*"
+ssd1306 = "*"
 
 [dev-dependencies]
 cortex-m-semihosting = "*"
