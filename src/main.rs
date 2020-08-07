@@ -17,12 +17,9 @@ use hal::prelude::*;
 use hal::twim;
 pub use nrf52840_hal as hal;
 
-// TODO: Don't do the serial init here, use the mod
-// pub mod serial;
-// pub use serial::SERIAL;
-
 use mcp23017::Mcp23017;
 
+// TODO: Don't do the serial init here, create a mod
 pub type SafeSerial = Mutex<RefCell<Option<hal::uarte::Uarte<hal::pac::UARTE0>>>>;
 pub static SERIAL: SafeSerial = Mutex::new(RefCell::new(None));
 
