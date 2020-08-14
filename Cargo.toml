@@ -13,7 +13,10 @@ nb = "*"
 nrf52840-hal = "*"
 # nrf52840-hal = { git = "https://github.com/japaric/nrf-hal", branch = "usb-device" }
 # panic-semihosting = "*"
-ssd1306 = "*"
+# rubble = { git = "https://github.com/jonas-schievink/rubble" }
+# rubble-nrf5x = { git = "https://github.com/jonas-schievink/rubble", features = ["52840"] }
+rubble = { version = "*", features = ["log"] }
+rubble-nrf5x = { version = "*", features = ["52840"] }
 
 [dev-dependencies]
 cortex-m-semihosting = "*"
@@ -33,3 +36,9 @@ lto = false
 debug = true
 lto = true
 opt-level = "s"
+
+[patch.crates-io.rubble]
+path = "../rubble/rubble"
+
+[patch.crates-io.rubble-nrf5x]
+path = "../rubble/rubble-nrf5x"
